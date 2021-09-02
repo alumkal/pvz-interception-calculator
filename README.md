@@ -1,5 +1,5 @@
 # pvz-interception-calculator
-a calculator (also named "brain vs zombies") that computes the time and space data of plants &amp; zombies precisely
+* a calculator (also named "brain vs zombies") that computes the time and space data of plants &amp; zombies precisely
 
 
 # Description
