@@ -29,7 +29,8 @@ helpText = cleandoc("""
     delay(xgInfo, rows, explodeInfo, isIced=False, exact=False) - 求最早/最晚拦截时机
         --为简化计算，计算时只考虑最左、最右巨人
         --可以单独使用minDelay或maxDelay；xgInfo接受单数也接受范围
-            --例如，minDelay(806, [1, 2, 5, 6], doom(3, 3)) 表示1、2、5、6路原速巨人x坐标806，3-3核武最早何时能尾炸；delay([788, 806], [1, 2, 5, 6], doom(3, 3))则可以求出最早和最晚时机
+            --例如，minDelay(806, [1, 2, 5, 6], doom(3, 3)) 表示1、2、5、6路原速巨人x坐标806，3-3核武最早何时能尾炸；
+              delay([788, 806], [1, 2, 5, 6], doom(3, 3))则可以求出最早和最晚时机
         --如果认为结果有问题，请尝试将exact设为True（开销较大）；程序会遍历每个坐标的巨人并分别计算
 
     pos(paoTime) 或 pos(iceTime, paoTime) - 输入冰时机、激活时机，求巨人坐标范围
@@ -50,6 +51,7 @@ helpText = cleandoc("""
 
     iceKill(xgInfo, xgRows, isIced=True, verbosity=1) - 冰杀小鬼计算
         --例如，iceKill([734, 789], [3], True) 表示减速巨人x坐标范围[734~789]，只考虑3路巨人（实际上每一路都一样），计算冰冻全部小鬼的最早时机。
+
     --judge和iceKill都会给出一个AvgDamage，但这仅为平均值，实际伤害概率分布并不为此，仅可作为参考，不可视为伤害的期望值。
 
 其他：

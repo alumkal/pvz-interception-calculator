@@ -13,6 +13,7 @@ v1.2 changelog
 '''
 
 from inspect import cleandoc
+import sys
 from garg_pos import *
 from help_text import *
 
@@ -538,15 +539,15 @@ def getIceTimeDesc(iceTime):
         return str(iceTime)+"冰"
 
 
-print(welcomeText)
-scene("PE", True)
-iceTime = []
-paoTime = 225
-while True:
+iceTime, paoTime = [], 225
+
+def main():
+    global iceTime
+    global paoTime
     line = input("\n>> ")
     try:
         if line == "exit" or line == "quit":
-            break
+            sys.exit()
         elif line == "help":
             print(helpText)
         elif line.upper() in ["DE", "NE", "PE", "FE", "RE", "ME"]:
@@ -559,7 +560,7 @@ while True:
             elif len(params) == 2:
                 if int(params[1]) <= 0:
                     print("意外的输入。激活时机应为正数。")
-                    continue
+                    return
                 iceTime = []
                 paoTime = int(params[1])
                 gargPos = pos(iceTime, paoTime, oppress=True)
@@ -571,10 +572,10 @@ while True:
                 if int(params[1]) > 0:
                     if int(params[1]) > int(params[2]):
                         print("意外的输入。激活时机不能早于冰时机。")
-                        continue
+                        return
                 if int(params[2]) <= 0:
                     print("意外的输入。激活时机应为正数。")
-                    continue
+                    return
                 iceTime = [int(x) for x in params[1:-1]]
                 paoTime = int(params[-1])
                 gargPos = pos(iceTime, paoTime, oppress=True)
@@ -587,16 +588,16 @@ while True:
             if isRoof:
                 if len(params) < 2:
                     print("意外的输入。屋顶场地需要指定炮尾所在列。")
-                    continue
+                    return
                 paoCol = int(params[1])
                 if paoCol < 1 or paoCol > 8:
                     print("意外的输入。炮尾所在列只能输入1~8。")
-                    continue
+                    return
             if (isRoof and len(params) >= 3) or (not isRoof and len(params) >= 2):
                 extra = int(params[2]) if isRoof else int(params[1])
                 if extra <= 0:
                     print("意外的输入。延迟必须为正数。")
-                    continue
+                    return
                 gargPos = pos(iceTime, paoTime + extra, oppress=True)
                 print("延迟炮生效时机:", paoTime + extra)
             else:
@@ -618,16 +619,16 @@ while True:
             if isRoof:
                 if len(params) < 2:
                     print("意外的输入。屋顶场地需要指定炮尾所在列。")
-                    continue
+                    return
                 paoCol = int(params[1])
                 if paoCol < 1 or paoCol > 8:
                     print("意外的输入。炮尾所在列只能输入1~8。")
-                    continue
+                    return
             if (isRoof and len(params) >= 3) or (not isRoof and len(params) >= 2):
                 extra = int(params[2]) if isRoof else int(params[1])
                 if extra <= 0:
                     print("意外的输入。延迟必须为正数。")
-                    continue
+                    return
                 gargPos = pos(iceTime, paoTime + extra, oppress=True)
                 print("延迟炮生效时机:", paoTime + extra)
             else:
@@ -650,33 +651,33 @@ while True:
             if isRoof:
                 if len(params) <= 2:
                     print("意外的输入。屋顶场地需要指定炮尾所在列。")
-                    continue
+                    return
                 paoCol = int(params[1])
                 if paoCol < 1 or paoCol > 8:
                     print("意外的输入。炮尾所在列只能输入1~8。")
-                    continue
+                    return
                 params.pop(1)
             if len(params) == 1:
                 print("意外的输入。需要指定落点。")
-                continue
+                return
             if len(params) >= 2:
                 paoX = float(params[1])
                 if paoX < 0 or paoX >= 10:
                     print("意外的输入。落点超出有效范围（0~9.9875）。")
-                    continue
+                    return
                 if len(params) >= 3:
                     rows = int(params[2])
                     if not rows in [1, 2, 3]:
                         print("意外的输入。拦截行数应为1~3。")
-                        continue
+                        return
                 else:
                     rows = 2
                 isIced = (iceTime != [] and iceTime[-1] + 1999 > paoTime)
                 paoRow = 3
                 xgRow = list(range(5 - rows, 5))
                 gargPos = pos(iceTime, paoTime, oppress=True)
-                minDelay, maxDelay = delay(gargPos, xgRow, cob(paoRow, paoX, paoCol), isIced)
-                if iceTime[-1] + 1999 <= paoTime + maxDelay:
+                minDelay_, maxDelay_ = delay(gargPos, xgRow, cob(paoRow, paoX, paoCol), isIced)
+                if iceTime != [] and iceTime[-1] + 1999 <= paoTime + maxDelay_:
                     print("警告：拦截过程中巨人/小鬼恢复原速。请自行换算拦截时机。")
         elif line == "version":
             print("BrainVsZombies General Interception Calculator ver 1.2 by Elovi, Crescendo, Reisen")
@@ -685,3 +686,9 @@ while True:
     except Exception as e:
         print(e)
         print("意外的输入。输入help查看帮助。")
+
+if __name__ == "__main__":
+    print(welcomeText)
+    scene("PE", True)
+    while True:
+        main()
